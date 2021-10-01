@@ -1,0 +1,19 @@
+version: "3"
+
+service:
+  Database_MySQL:
+    image: mysql:5.7
+    container_name: Database_MySQL
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=Owl
+      - MYSQL_USER=Owl
+      - MYSQL_PASSWORD=1q2w3e4r
+      - MYSQL_ALLOW_EMPTY_PASSWORD=false
+      - LC_ALL=C.UTF-8
+    volumes:
+      - "./docker/mysql/mysql-init-files/:/docker-entrypoint-initdb.d/"
+      - "./docker/mysql/mysql-data:/var/lib/mysql"
+    ports:
+      - "3306:3306"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
