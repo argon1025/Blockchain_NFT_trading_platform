@@ -1,9 +1,9 @@
 version: "3"
 
-service:
-  Database_MySQL:
+services:
+  DatabaseServer_MySQL:
     image: mysql:5.7
-    container_name: Database_MySQL
+    container_name: DatabaseServer_MySQL
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=Owl
