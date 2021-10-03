@@ -1,17 +1,36 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App";
-import { store } from "./app/store";
+
+// Redux Modules
+import store from "./redux/store";
 import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
+//Redux Persist
+import { persistStore } from "redux-persist";
+import { PersistGate } from "redux-persist/integration/react";
+
+// Router
+import { BrowserRouter, Route } from "react-router-dom";
+
+// Containers
+import * as Container from "./containers";
+
+const persistor = persistStore(store);
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>,
+  <BrowserRouter basename="/">
+    <React.StrictMode>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <Route exact path="/"></Route>
+          <Route exact path="/app">
+            <Container.Web3LoginContainer />
+          </Route>
+        </PersistGate>
+      </Provider>
+    </React.StrictMode>
+  </BrowserRouter>,
   document.getElementById("root")
 );
 
