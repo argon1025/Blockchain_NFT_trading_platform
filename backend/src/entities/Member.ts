@@ -1,54 +1,60 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Item } from "./Item";
-import { ItemHistory } from "./ItemHistory";
-import { Market } from "./Market";
-import { MemberHistory } from "./MemberHistory";
-import { TradeHistory } from "./TradeHistory";
+import { ApiProperty } from '@nestjs/swagger';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Item } from './Item';
+import { ItemHistory } from './ItemHistory';
+import { Market } from './Market';
+import { MemberHistory } from './MemberHistory';
+import { TradeHistory } from './TradeHistory';
 
-@Entity("member", { schema: "owl" })
+@Entity('member', { schema: 'owl' })
 export class Member {
   @PrimaryGeneratedColumn({
-    type: "int",
-    name: "id",
-    comment: "멤버 아이디",
+    type: 'int',
+    name: 'id',
+    comment: '멤버 아이디',
     unsigned: true,
   })
   id: number;
 
-  @Column("varchar", { name: "provider", comment: "로그인 타입", length: 30 })
+  @Column('varchar', { name: 'provider', comment: '로그인 타입', length: 30 })
   provider: string;
 
-  @Column("varchar", {
-    name: "name",
+  @Column('varchar', {
+    name: 'name',
     nullable: true,
-    comment: "유저 이름",
+    comment: '유저 이름',
     length: 30,
+  })
+  @ApiProperty({
+    example: 'MemberName',
+    description: '유저 이름',
+    required: true,
   })
   name: string | null;
 
-  @Column("varchar", {
-    name: "iconURL",
+  @Column('varchar', {
+    name: 'iconURL',
     nullable: true,
-    comment: "유저 프로필 URL",
+    comment: '유저 프로필 URL',
     length: 300,
   })
   iconUrl: string | null;
 
-  @Column("varchar", {
-    name: "wallet",
+  @Column('varchar', {
+    name: 'wallet',
     nullable: true,
-    comment: "지갑 주소",
+    comment: '지갑 주소',
     length: 300,
   })
   wallet: string | null;
 
-  @Column("varchar", {
-    name: "privateCode",
+  @Column('varchar', {
+    name: 'nonce',
     nullable: true,
-    comment: "지갑 프라이빗 코드",
+    comment: '유저 넌스 코드',
     length: 300,
   })
-  privateCode: string | null;
+  nonce: string | null;
 
   @OneToMany(() => Item, (item) => item.member)
   items: Item[];
