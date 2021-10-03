@@ -23,7 +23,9 @@ ReactDOM.render(
     <React.StrictMode>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <Route exact path="/"></Route>
+          <Route exact path="/">
+            <Container.NavigationContainer />
+          </Route>
           <Route exact path="/app">
             <Container.Web3LoginContainer />
           </Route>

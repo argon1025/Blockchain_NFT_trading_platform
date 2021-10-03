@@ -7,6 +7,9 @@ import storage from "redux-persist/lib/storage";
 // 초기 데이터 설정
 export const store = {
   APP_VERSION: "0.2",
+  NAME: "User",
+  ADDRESS: "0x00000000000",
+  LOGIN: false,
 };
 
 // 새로고침 상태 저장을 위한 redux-persist 설정

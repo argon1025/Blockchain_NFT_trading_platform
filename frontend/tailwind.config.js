@@ -3,7 +3,23 @@ module.exports = {
   purge: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        "eng-main-font": ["Poppins", "sans-serif"],
+        "kor-main-font": ["Noto Sans KR", "sans-serif"],
+        "sub-font": ["Quicksand", "sans-serif"],
+      },
+      animation: {
+        fadeIn1: "fadeIn 2s ease-in forwards",
+        fadeIn2: "fadeIn 5s ease-in forwards",
+      },
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: 0 },
+          "100%": { opacity: 1 },
+        },
+      },
+    },
   },
   variants: {
     extend: {},
