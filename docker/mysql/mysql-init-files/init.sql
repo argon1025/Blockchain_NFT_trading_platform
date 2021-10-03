@@ -10,7 +10,7 @@ CREATE TABLE member
 `name`      VARCHAR(30)     NULL    COMMENT '유저 이름',
 `iconURL`       VARCHAR(300)    NULL        COMMENT '유저 프로필 URL',
 `wallet`       VARCHAR(300)    NULL        COMMENT '지갑 주소',
-`privateCode`       VARCHAR(300)    NULL        COMMENT '지갑 프라이빗 코드',
+`nonce`       VARCHAR(300)    NULL        COMMENT '유저 넌스 코드',
 CONSTRAINT PK_members PRIMARY KEY (id)
 );
 
