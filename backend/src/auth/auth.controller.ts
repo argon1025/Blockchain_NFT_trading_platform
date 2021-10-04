@@ -20,8 +20,7 @@ export class AuthController {
     type: AuthLoginDTO,
   })
   @Post('metamasklogin')
-  @UseGuards(AuthGuard)
-  async memberLogin(@Body() authLoginDTO: AuthLoginDTO, @Session() session: Record<string, any>) {
+  async memberLogin(@Body() authLoginDTO: AuthLoginDTO, @Req() req) {
     // 존재하는 유저인지 확인하고 유저정보를 로드한다
     const userInfo = await this.authService.memberAlreadyExistFindByAddress(authLoginDTO.address);
 
@@ -37,9 +36,10 @@ export class AuthController {
       // DB ID
       // DB walletAddress
       // DB name
-      session.data.memberID = userInfo.id;
-      session.data.wallet = userInfo.wallet;
-      session.data.name = userInfo.name;
+      req.session.memberID = userInfo.id;
+      req.session.wallet = userInfo.wallet;
+      req.session.name = userInfo.name;
+      await req.session.save;
       return responseCreatorUtil('로그인 성공', '200');
     } else {
       throw new HttpException({ msg_code: 'Auth_C_2', msg: '서명 검증에 실패했습니다 다시 서명해 주세요' }, 401);
@@ -96,5 +96,15 @@ export class AuthController {
     }
     console.log(userInfo);
     return responseCreatorUtil('ok', '200', { data: userInfo.nonce });
+  }
+
+  @ApiTags('Auth')
+  @ApiOperation({ summary: '세션정보를 조회합니다' })
+  @Get('userinfo')
+  //@UseGuards(AuthGuard)
+  async getUserInfo(@Session() session: Record<string, any>, @Req() req) {
+    console.log(req.sessionID);
+    console.log(req.session.memberID);
+    return responseCreatorUtil('ok', '200', { userInfo: { memberID: session.memberID, address: session.wallet, name: session.name } });
   }
 }

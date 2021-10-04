@@ -7,6 +7,11 @@ export class AuthGuard implements CanActivate {
     // 로그인 유무를 확인한다
     Logger.log('AuthGuard', 'INFO');
     const request = context.switchToHttp().getRequest();
-    return true;
+    console.log(request.session.memberID);
+    if (!request.session.memberID) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }
