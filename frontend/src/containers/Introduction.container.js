@@ -1,4 +1,4 @@
-import { NavigationComponent } from "../components";
+import { IntroductionComponent } from "../components";
 import { connect } from "react-redux";
 
 function reduxStateToReactProps(state) {
@@ -13,4 +13,4 @@ function reduxDispatchToReactProps(dispatch) {
 export default connect(
   reduxStateToReactProps,
   reduxDispatchToReactProps
-)(NavigationComponent);
+)(IntroductionComponent);

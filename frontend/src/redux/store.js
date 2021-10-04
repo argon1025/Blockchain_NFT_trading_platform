@@ -10,6 +10,10 @@ export const store = {
   NAME: "User",
   ADDRESS: "0x00000000000",
   LOGIN: false,
+  ERROR: false,
+  ERROR_MESSAGE: "",
+  NONCE_DATA: 0,
+  ID: 0,
 };
 
 // 새로고침 상태 저장을 위한 redux-persist 설정

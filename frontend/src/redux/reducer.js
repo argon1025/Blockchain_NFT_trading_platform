@@ -6,8 +6,27 @@ const reducer = (state = store, action) => {
 
   // 액션 처리
   switch (action.type) {
-    case "ServiceInformaion/SET_TEXT":
-      return { ...state, TEST_VALUE: action.size };
+    // 지갑 주소 변경 이벤트 처리
+    case "SET_ADDRESS":
+      return { ...state, ADDRESS: action.size };
+    case "SET_ERROR":
+      return {
+        ...state,
+        ERROR: true,
+        ERROR_MESSAGE: action.size.ERROR_MESSAGE,
+        ERROR_CODE: action.size.ERROR_CODE,
+      };
+    case "SET_NONCE":
+      return {
+        ...state,
+        NONCE: action.size,
+      };
+    case "SET_USER_INFO":
+      return {
+        ...state,
+        ID: action.size.ID,
+        NAME: action.size.NAME,
+      };
     default:
       return state;
   }

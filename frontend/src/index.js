@@ -24,9 +24,9 @@ ReactDOM.render(
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <Route exact path="/">
-            <Container.NavigationContainer />
+            <Container.IntroductionContainer />
           </Route>
-          <Route exact path="/app">
+          <Route exact path="/metamasklogin">
             <Container.Web3LoginContainer />
           </Route>
         </PersistGate>
