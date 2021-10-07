@@ -4,25 +4,84 @@ import * as ethUtil from "ethereumjs-util";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import * as sigUtil from "eth-sig-util";
 import Axios from "axios";
-export default class Web3LoginComponent extends Component {
+
+export default class MemberJoinComponent extends Component {
   // eslint-disable-next-line no-useless-constructor
   constructor(props) {
     super(props);
     this.state = {
       // 로딩 메시지 출력
-      loadingMessage: "부엉이가 날아가는중..",
-      // 기등록 지갑 유무
-      isJoined: false,
+      loadingMessage: "가입이 필요하신거 같아요!",
+      needJoin: false,
+      memberName: "",
     };
   }
   changeLoadingMessage = (message) => {
     this.setState({ ...this.state, loadingMessage: `${message}` });
   };
 
+  viewJoinForm = () => {
+    this.setState({ ...this.state, needJoin: true });
+  };
+
   timer = (timeSet) => {
     return new Promise((resolve) => {
       setTimeout(resolve, timeSet);
     });
+  };
+
+  memberNameFromChange = (event) => {
+    this.setState({ ...this.state, memberName: event.target.value });
+    console.log(event);
+  };
+
+  signUpButtonClick = async () => {
+    console.log(this.state);
+
+    // 서명 받음
+    // 사용자 주소를 넌스 코드로 암호화 진행
+    let signResult;
+    while (true) {
+      try {
+        this.changeLoadingMessage("가입을 위해 서명 부탁드릴께요!");
+        signResult = await window.web3.eth.personal.sign(
+          this.props.ADDRESS,
+          this.props.ADDRESS
+        );
+        break;
+      } catch (error) {
+        if (error.code == 4001) {
+          this.changeLoadingMessage("로그인을 위해선 서명이 꼭 필요해요!");
+          await this.timer(3000);
+        } else {
+          this.changeLoadingMessage(
+            "부엉이가 사용자의 서명을 확인하는데 실패했어요!"
+          );
+          await this.timer(3000);
+          window.location.href = "/";
+        }
+      }
+    }
+    // 회원가입 요청
+    try {
+      await Axios.post(`http://localhost:8080/auth/metamaskjoin`, {
+        name: `${this.state.memberName}`,
+        address: `${this.props.ADDRESS}`,
+        signed: `${signResult}`,
+      });
+      this.changeLoadingMessage("부엉이가 회원권을 발급하는중!");
+      await this.timer(1000);
+    } catch (error) {
+      this.changeLoadingMessage(
+        "가입에 실패했습니다 잠시후에 다시 시도해 주세요!"
+      );
+      await this.timer(5000);
+      window.location.href = "/";
+    }
+    // 완료후에 다시 로그인 페이지로 콜 백
+    this.changeLoadingMessage("가입을 성공했습니다!");
+    await this.timer(1000);
+    window.location.href = "/metamasklogin";
   };
 
   async componentDidMount() {
@@ -33,6 +92,7 @@ export default class Web3LoginComponent extends Component {
       this.changeLoadingMessage("메타마스크 홈페이지로 보내드릴께요!");
       await this.timer(5000);
       window.location.href = "https://metamask.io/";
+      return false;
     }
 
     // 메타마스크 인증후 지갑주소 저장
@@ -43,6 +103,7 @@ export default class Web3LoginComponent extends Component {
         this.changeLoadingMessage(
           "부엉이가 사용자의 지갑을 확인하고 있습니다!"
         );
+        await this.timer(1000);
         const accounts = await window.ethereum.request({
           method: "eth_requestAccounts",
         });
@@ -68,113 +129,16 @@ export default class Web3LoginComponent extends Component {
     }
 
     // 넌스 코드 질의 질의 실패시 이후 행동 중지 후에 회원가입 컴포넌트 출력
-    this.changeLoadingMessage("부엉이가 사용자의 지갑을 확인했습니다!");
-    await this.timer(1000);
-
-    try {
-      const nonceResult = await Axios.get(
-        `http://localhost:8080/auth/nonce/${this.props.ADDRESS}`
-      );
-      this.props.setNonce(nonceResult.data.data);
-    } catch (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        // console.log(error.response.data);
-        // console.log(error.response.status);
-        // console.log(error.response.headers);
-        // 가입되지 않은 사용자
-        window.location.href = "/metamaskjoin";
-        return false;
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.log("Error", error.message);
-      }
-      this.changeLoadingMessage(
-        "Owl Market의 백엔드 서비스가 아쉽지만 종료되었습니다 메인 페이지로 보내드릴께요"
-      );
-      await this.timer(5000);
-      window.location.href = "/";
-    }
-
-    // 넌스 코드로 암호화 진행후 백엔드 로그인 요청
-    let signResult;
-    while (true) {
-      try {
-        this.changeLoadingMessage("로그인을 위해 서명 부탁드릴께요!");
-        signResult = await window.web3.eth.personal.sign(
-          this.props.NONCE,
-          this.props.ADDRESS
-        );
-        break;
-      } catch (error) {
-        if (error.code == 4001) {
-          this.changeLoadingMessage("로그인을 위해선 서명이 꼭 필요해요!");
-          await this.timer(3000);
-        } else {
-          this.changeLoadingMessage(
-            "부엉이가 사용자의 지갑을 확인하는데 실패했어요.. 잠시후에 다시 시도해 주세요!"
-          );
-          await this.timer(5000);
-          window.location.href = "/";
-        }
-      }
-    }
-    try {
-      await Axios.post(
-        `http://localhost:8080/auth/metamasklogin`,
-        {
-          signed: `${signResult}`,
-          address: `${this.props.ADDRESS}`,
-        },
-        { withCredentials: true }
-      );
-      this.changeLoadingMessage("부엉이가 가게문을 여는중");
-      await this.timer(1000);
-    } catch (error) {
-      this.changeLoadingMessage(
-        "로그인에 실패했습니다 잠시후에 다시 시도해 주세요!"
-      );
-      await this.timer(5000);
-      window.location.href = "/";
-    }
-
-    // 로그인 성공시 디비에 유저정보 획득 반영 후 메인 페이지로 리다이렉트 실패시 일단 콘솔에러 출력, 로딩메시지 변경
-    try {
-      const userInfoResult = await Axios.get(
-        `http://localhost:8080/auth/userinfo`,
-        { withCredentials: true }
-      );
-      console.log(userInfoResult.data.userInfo);
-      this.props.setUserInfo(
-        userInfoResult.data.userInfo.memberID,
-        userInfoResult.data.userInfo.name
-      );
-    } catch (error) {
-      console.log(error);
-      this.changeLoadingMessage(
-        "유저정보 획득에 실패했어요 잠시뒤에 다시 시도해 주세요!"
-      );
-      await this.timer(5000);
-      window.location.href = "/";
-    }
-    this.changeLoadingMessage(`${this.props.NAME}님 어서오세요 환영합니다!`);
-    await this.timer(3000);
-    window.location.href = "/index";
-    // 지갑 변경, 네트워크 변경시 로그인 취소 및 메인 페이지로
+    this.changeLoadingMessage("안녕하세요 처음이시군요!");
+    this.viewJoinForm();
   }
 
   render() {
     return (
-      <div className="grid grid-cols-1 justify-items-center animate-pulse">
+      <div className="grid grid-cols-1 justify-items-center">
         <div className="mt-32">
           <svg
-            className="h-20 w-20 fill-current text-gray-400"
+            className="h-20 w-20 fill-current text-yellow-300"
             id="Layer_1"
             enable-background="new 0 0 512.326 512.326"
             viewBox="0 0 512.326 512.326"
@@ -187,6 +151,33 @@ export default class Web3LoginComponent extends Component {
         <span className="text-sm text-gray-400 mt-5 font-kor-main-font">
           {this.state.loadingMessage}
         </span>
+        {/* 회원가입 폼 */}
+        {this.state.needJoin ? (
+          <div className="animate-fadeIn1 flex flex-col mt-5 shadow-lg p-4 rounded-lg w-11/12 xl:w-1/4 transition duration-300">
+            <div class="">
+              <label
+                class="mr-4 text-gray-700 font-bold inline-block mb-2"
+                for="name"
+              >
+                표시될 이름
+              </label>
+              <input
+                type="text"
+                class="border bg-gray-100 py-2 px-4 w-full outline-none focus:ring-2 focus:ring-yellow-300 rounded"
+                placeholder="착한 부엉씨"
+                onChange={this.memberNameFromChange}
+              />
+            </div>
+            <button
+              class="w-full mt-6 text-white font-eng-main-font font-bold bg-yellow-300 py-3 rounded-lg hover:bg-yellow-400 transition duration-300"
+              onClick={this.signUpButtonClick}
+            >
+              Sign Up Owl Market
+            </button>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     );
   }

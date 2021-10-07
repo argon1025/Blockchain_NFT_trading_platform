@@ -29,6 +29,12 @@ ReactDOM.render(
           <Route exact path="/metamasklogin">
             <Container.Web3LoginContainer />
           </Route>
+          <Route exact path="/metamaskjoin">
+            <Container.MemberJoinContainer />
+          </Route>
+          <Route exact path="/index">
+            <Container.MainContentContainer />
+          </Route>
         </PersistGate>
       </Provider>
     </React.StrictMode>

@@ -318,7 +318,7 @@ export default class IntroductionComponent extends Component {
           {/* 로그인 버튼 */}
           <button
             type="button"
-            className="animate-bounce border border-text-white-300 text-text-white-300 rounded-md px-4 py-2 mt-4 transition duration-500 ease select-none hover:text-white hover:bg-blue-300 hover:border-blue-300 focus:outline-none focus:shadow-outline"
+            className="border border-text-white-300 text-text-white-300 rounded-full px-4 py-2 mt-4 transition duration-500 ease select-none hover:text-white hover:bg-yellow-400 hover:border-yellow-400 focus:outline-none focus:shadow-outline"
             onClick={this.loginButtonForMetaMask}
           >
             <div className="flex flex-row flex-nowrap align-middle justify-center">
