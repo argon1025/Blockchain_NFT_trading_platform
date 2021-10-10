@@ -10,6 +10,8 @@ import { ItemHistory } from './entities/ItemHistory';
 import { Market } from './entities/Market';
 import { TradeHistory } from './entities/TradeHistory';
 import { ItemModule } from './item/item.module';
+import { MarketModule } from './market/market.module';
+import { TradeRequest } from './entities/TradeRequest';
 
 @Module({
   imports: [
@@ -27,7 +29,7 @@ import { ItemModule } from './item/item.module';
         username: configService.get<string>('DB_USERNAME', 'user'),
         password: configService.get<string>('DB_PASSWORD', 'password'),
         database: configService.get<string>('DB_DATABASE', 'database'),
-        entities: [Member, Item, MemberHistory, ItemHistory, Market, TradeHistory],
+        entities: [Member, Item, MemberHistory, ItemHistory, Market, TradeHistory, TradeRequest],
         synchronize: false,
         logging: true,
         keepConnectionAlive: true,
@@ -37,6 +39,7 @@ import { ItemModule } from './item/item.module';
     }),
     AuthModule,
     ItemModule,
+    MarketModule,
   ],
   controllers: [],
   providers: [],

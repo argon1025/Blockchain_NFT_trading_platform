@@ -3,9 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Item } from 'src/entities/Item';
 import { ItemHistory } from 'src/entities/ItemHistory';
 import { MemberHistory } from 'src/entities/MemberHistory';
-import { Any, Repository } from 'typeorm';
-import { CreateItemDto } from './dto/create-item.dto';
-import { UpdateItemDto } from './dto/update-item.dto';
+import { Repository } from 'typeorm';
 import { getToDay } from '../util/time.manager.util';
 
 @Injectable()
@@ -120,25 +118,5 @@ console.log(itemResult);
     } catch (error) {
       throw new HttpException({ msg_code: 'Item_3', msg: '리스트 조회에 실패했습니다' }, 500);
     }
-  }
-
-  create(createItemDto: CreateItemDto) {
-    return 'This action adds a new item';
-  }
-
-  findAll() {
-    return `This action returns all item`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} item`;
-  }
-
-  update(id: number, updateItemDto: UpdateItemDto) {
-    return `This action updates a #${id} item`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} item`;
   }
 }

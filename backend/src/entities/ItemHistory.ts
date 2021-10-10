@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Item } from './Item';
 import { Member } from './Member';
+import { TradeRequest } from './TradeRequest';
 
 @Index('FK_itemHistory_memberID_to_member_id', ['memberId'], {})
 @Index('FK_itemHistory_itemID_to_item_id', ['itemId'], {})
@@ -57,4 +58,7 @@ export class ItemHistory {
   })
   @JoinColumn([{ name: 'memberID', referencedColumnName: 'id' }])
   member: Member;
+
+  @OneToMany(() => TradeRequest, (tradeRequest) => tradeRequest.item)
+  tradeRequests: TradeRequest[];
 }

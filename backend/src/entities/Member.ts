@@ -5,6 +5,7 @@ import { ItemHistory } from './ItemHistory';
 import { Market } from './Market';
 import { MemberHistory } from './MemberHistory';
 import { TradeHistory } from './TradeHistory';
+import { TradeRequest } from './TradeRequest';
 
 @Entity('member', { schema: 'owl' })
 export class Member {
@@ -76,4 +77,10 @@ export class Member {
 
   @OneToMany(() => TradeHistory, (tradeHistory) => tradeHistory.targetMember)
   tradeHistories2: TradeHistory[];
+
+  @OneToMany(() => TradeRequest, (tradeRequest) => tradeRequest.approverMember)
+  tradeRequests: TradeRequest[];
+
+  @OneToMany(() => TradeRequest, (tradeRequest) => tradeRequest.requestMember)
+  tradeRequests2: TradeRequest[];
 }

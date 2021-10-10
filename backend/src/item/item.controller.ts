@@ -16,7 +16,7 @@ export class ItemController {
     type: CreateItemDto,
   })
   async create(@Body() createItemDto: CreateItemDto, @Req() req) {
-    // 아이템을 생성합니다. req.session.memberID
+    // 아이템을 생성합니다.
     const itemID = await this.itemService.createItem(req.session.memberID);
     // 생성된 아이템 아이디를 기반으로 타이틀을 등록합니다
     await this.itemService.addItemHistory(req.session.memberID, itemID, 'title', `${createItemDto.title}`);
