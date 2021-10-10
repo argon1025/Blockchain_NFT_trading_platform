@@ -9,6 +9,7 @@ import { MemberHistory } from './entities/MemberHistory';
 import { ItemHistory } from './entities/ItemHistory';
 import { Market } from './entities/Market';
 import { TradeHistory } from './entities/TradeHistory';
+import { ItemModule } from './item/item.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { TradeHistory } from './entities/TradeHistory';
       inject: [ConfigService],
     }),
     AuthModule,
+    ItemModule,
   ],
   controllers: [],
   providers: [],
