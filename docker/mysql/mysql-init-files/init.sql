@@ -111,3 +111,30 @@ ALTER TABLE  market
 ALTER TABLE  market
     ADD CONSTRAINT FK_market_itemID_to_item_id FOREIGN KEY (itemID)
         REFERENCES item (id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+-- tradeRequest
+-- 거래 요청
+CREATE TABLE tradeRequest
+(
+`id`        INT UNSIGNED    NOT NULL    AUTO_INCREMENT COMMENT '거래 인덱스',
+`requestMemberID`  INT UNSIGNED    NOT NULL    COMMENT '요청자',
+`approverMemberID`  INT UNSIGNED    NOT NULL    COMMENT '승인자',
+`itemID`          INT UNSIGNED    NOT NULL    COMMENT '아이템 아이디',
+`review`       INT UNSIGNED     NOT NULL    COMMENT '리뷰 작성 가능 횟수',
+`createdAt`        DATETIME        NOT NULL    COMMENT '생성일',
+`status`       VARCHAR(30)     NOT NULL    COMMENT '진행 상태',
+CONSTRAINT PK_tradeRequest PRIMARY KEY (id)
+);
+-- 제약조건 및 FK 설정
+ALTER TABLE tradeRequest
+    ADD CONSTRAINT FK_tradeRequest_requestMemberID_to_member_id FOREIGN KEY (requestMemberID)
+        REFERENCES member (id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE tradeRequest
+    ADD CONSTRAINT FK_tradeRequest_approverMemberID_to_member_id FOREIGN KEY (approverMemberID)
+        REFERENCES member (id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE tradeRequest
+    ADD CONSTRAINT FK_tradeRequest_itemID_to_item_id FOREIGN KEY (itemID)
+        REFERENCES item (id) ON DELETE CASCADE ON UPDATE CASCADE;
