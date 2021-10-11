@@ -8,6 +8,8 @@ export class AuthGuard implements CanActivate {
     Logger.log('AuthGuard', 'INFO');
     const request = context.switchToHttp().getRequest();
     console.log(request.session.memberID);
+
+    // 세션 데이터가 있는지 확인한다
     if (!request.session.memberID) {
       return false;
     } else {

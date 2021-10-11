@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
 import { MarketService } from './market.service';
 import { CreateMarketDto } from './dto/create-market.dto';
 import { UpdateMarketDto } from './dto/update-market.dto';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { responseCreatorUtil } from 'src/util/response.creator.util';
 import { CreateRequestTrade } from './dto/create-requestTrade.dto';
+import { AuthGuard } from 'src/guards/Auth.guard';
 
 @Controller()
 export class MarketController {
@@ -13,6 +14,7 @@ export class MarketController {
   @Post('market')
   @ApiTags('Market')
   @ApiOperation({ summary: '판매 게시글을 등록합니다.' })
+  @UseGuards(AuthGuard)
   async createMarket(@Body() createMarketDto: CreateMarketDto, @Req() req) {
     // 세션 멤버 아이디
     const memberID = req.session.memberID;
@@ -45,26 +47,28 @@ export class MarketController {
   @Post('market/requestTrade')
   @ApiTags('Market')
   @ApiOperation({ summary: '거래 신청을 요청합니다.' })
+  @UseGuards(AuthGuard)
   async createRequestTrade(@Body() createRequestTradeDto: CreateRequestTrade, @Req() req) {
     // 세션 멤버 아이디
     const memberID = req.session.memberID;
-
     await this.marketService.requestTrade(memberID, createRequestTradeDto.approverMemberId, createRequestTradeDto.itemId);
 
     return responseCreatorUtil('신청 성공', '200');
   }
 
-  @Get('market/requestTrade')
+  @Get('requestTrade')
   @ApiTags('Market')
   @ApiOperation({ summary: '나에게온 거래신청 리스트를 요청합니다.' })
+  @UseGuards(AuthGuard)
   async requestTradeList(@Req() req) {
     // 세션 멤버 아이디
     const memberID = req.session.memberID;
+    const result = await this.marketService.getRequestTradeList(memberID);
 
-    return responseCreatorUtil('신청 성공', '200', { data: await this.marketService.getRequestTradeList(memberID) });
+    return responseCreatorUtil('성공!', '200', { data: result });
   }
 
-  @Post('market/requestTrade/:tradeID')
+  @Post('/requestTrade/:tradeID')
   @ApiTags('Market')
   @ApiOperation({ summary: '거래를 완료합니다.' })
   @ApiParam({
@@ -73,6 +77,7 @@ export class MarketController {
     required: true,
     description: '거래 아이디',
   })
+  @UseGuards(AuthGuard)
   async RequestTradeIdDone(@Param() paramsData) {
     await this.marketService.tradeIsDone(paramsData.tradeID);
 

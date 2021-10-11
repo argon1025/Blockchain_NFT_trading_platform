@@ -101,7 +101,7 @@ export class AuthController {
   @ApiTags('Auth')
   @ApiOperation({ summary: '세션정보를 조회합니다' })
   @Get('userinfo')
-  //@UseGuards(AuthGuard)
+  @UseGuards(AuthGuard)
   async getUserInfo(@Session() session: Record<string, any>, @Req() req) {
     console.log(req.sessionID);
     console.log(req.session.memberID);

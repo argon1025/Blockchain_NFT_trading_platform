@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
 import { ItemService } from './item.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { responseCreatorUtil } from 'src/util/response.creator.util';
+import { AuthGuard } from 'src/guards/Auth.guard';
 
 @Controller()
 export class ItemController {
@@ -15,6 +16,7 @@ export class ItemController {
   @ApiBody({
     type: CreateItemDto,
   })
+  @UseGuards(AuthGuard)
   async create(@Body() createItemDto: CreateItemDto, @Req() req) {
     // 아이템을 생성합니다.
     const itemID = await this.itemService.createItem(req.session.memberID);
@@ -22,7 +24,7 @@ export class ItemController {
     await this.itemService.addItemHistory(req.session.memberID, itemID, 'title', `${createItemDto.title}`);
     // 생성된 아이템 아이디를 기반으로 제품 설명을 등록합니다
     await this.itemService.addItemHistory(req.session.memberID, itemID, 'description', `${createItemDto.content}`);
-    return responseCreatorUtil('아이템 생성 성공', '200');
+    return responseCreatorUtil('아이템 생성 성공', '200', { data: itemID });
   }
 
   @Get('item/member/:memberID')

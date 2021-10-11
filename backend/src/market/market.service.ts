@@ -66,7 +66,7 @@ export class MarketService {
     try {
       const result = await this.tradeRequestRepository.save({
         requestMemberId: requestMemberID,
-        applicationId: approverMemberID,
+        approverMemberId: approverMemberID,
         itemId: itemID,
         review: 0,
         createdAt: getToDay(),
@@ -85,8 +85,34 @@ export class MarketService {
     try {
       // 해당 멤버의 승인이 필요한 거래목록을 찾는다, 리퀘스트를 보낸 멤버의 지갑정보를 함께 조인한다
       const result = await this.tradeRequestRepository.find({ where: { approverMemberId: memberId }, relations: ['requestMember'] });
-      console.log(result);
-      return true;
+      /**
+       console.log(result);
+{
+  "error": "false",
+  "msg": "성공!",
+  "msg_code": "200",
+  "data": [
+    {
+      "id": 1,
+      "requestMemberId": 1,
+      "approverMemberId": 1,
+      "itemId": 1,
+      "review": 0,
+      "createdAt": "2021-10-10T15:00:00.000Z",
+      "status": "Trade Request Send",
+      "requestMember": {
+        "id": 1,
+        "provider": "test",
+        "name": "leeseongrok",
+        "iconUrl": null,
+        "wallet": null,
+        "nonce": null
+      }
+    }
+  ]
+}
+       */
+      return result;
     } catch (error) {
       throw new HttpException({ msg_code: 'Market_6', msg: '거래신청 리스트를 들고오는데 실패했습니다.' }, 500);
     }
@@ -96,31 +122,11 @@ export class MarketService {
   async tradeIsDone(tradeID: number) {
     try {
       // 상태 메시지와 리뷰 가능횟수를 등록한다
-      const result = this.tradeRequestRepository.update({ id: tradeID }, { review: 1, status: 'Done' });
-      console.log(result);
+      const result = await this.tradeRequestRepository.update({ id: tradeID }, { review: 1, status: 'Done' });
+      // console.log(result); UpdateResult { generatedMaps: [], raw: [], affected: 1 }
       return true;
     } catch (error) {
       throw new HttpException({ msg_code: 'Market_7', msg: '거래를 마무리 하는데 실패했습니다.' }, 500);
     }
-  }
-
-  create(createMarketDto: CreateMarketDto) {
-    return 'This action adds a new market';
-  }
-
-  findAll() {
-    return `This action returns all market`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} market`;
-  }
-
-  update(id: number, updateMarketDto: UpdateMarketDto) {
-    return `This action updates a #${id} market`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} market`;
   }
 }
