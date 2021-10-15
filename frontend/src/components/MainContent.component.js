@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { TodayContainer } from "../containers";
+import * as Container from "../containers";
 import backgrundImage from "../content/BG_4.jpg";
 export default class MainContentComponent extends Component {
   // eslint-disable-next-line no-useless-constructor
@@ -9,6 +9,7 @@ export default class MainContentComponent extends Component {
   render() {
     return (
       <div className="flex flex-col justify-center bg-gray-50">
+        <Container.CautionModalContainer />
         <div className="flex flex-row m-5 z-40">
           <div className="flex-1 mt-2">
             <svg
@@ -23,14 +24,14 @@ export default class MainContentComponent extends Component {
             </svg>
           </div>
           <div className="ml-auto">
-            <p class="w-11 h-11 p-1 truncate rounded-2xl bg-white shadow-lg pt-4 text-xs bg-gradient-to-r from-green-200 to-blue-400 text-white border-2 border-white">
+            <p class="w-20 h-11 p-1 truncate rounded-2xl bg-white shadow-lg pt-4 text-xs bg-gradient-to-r from-green-200 to-blue-400 text-white border-2 border-white">
               {this.props.ADDRESS}
             </p>
           </div>
         </div>
         <div className="flex flex-nowrap flex-row overflow-x-scroll overflow-y-hidden whitespace-nowrap scroll-snap z-40">
           <div className="w-screen flex-none scroll-snap-item p-5">
-            <TodayContainer />
+            <Container.MyWalletContainer />
           </div>
           <div className="w-screen h-screen flex-none scroll-snap-item p-5">
             item 2
@@ -47,35 +48,6 @@ export default class MainContentComponent extends Component {
             src={backgrundImage}
             alt="MainIntroIMG"
           ></img>
-        </div>
-        <div class="flex flex-col p-8 bg-white shadow-md hover:shodow-lg rounded-2xl">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-16 h-16 rounded-2xl p-3 border border-blue-100 text-blue-400 bg-blue-50"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                ></path>
-              </svg>
-              <div class="flex flex-col ml-3">
-                <div class="font-medium leading-none">오류</div>
-                <p class="text-sm text-gray-600 leading-none mt-1">
-                  사용자 구성을 로드할 수 없습니다
-                </p>
-              </div>
-            </div>
-            <button class="flex-no-shrink bg-red-500 px-5 ml-4 py-2 text-sm shadow-sm hover:shadow-lg font-medium tracking-wider border-2 border-red-500 text-white rounded-full">
-              확인
-            </button>
-          </div>
         </div>
       </div>
     );

@@ -35,6 +35,9 @@ ReactDOM.render(
           <Route exact path="/index">
             <Container.MainContentContainer />
           </Route>
+          <Route exact path="/itemdetail">
+            <Container.ItemDetailContainer />
+          </Route>
         </PersistGate>
       </Provider>
     </React.StrictMode>
