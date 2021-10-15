@@ -7,6 +7,8 @@ import MyWalletContainer from "./MyWallet.container";
 import CautionModalContainer from "./CautionModal.container";
 import CreateNftModalContainer from "./CreateNftModal.container";
 import ItemDetailContainer from "./ItemDetail.container";
+import MarketContainer from "./Market.container";
+import MarketDetailContainer from "./MarketDetail.container";
 
 export {
   Web3LoginContainer,
@@ -18,4 +20,6 @@ export {
   CautionModalContainer,
   CreateNftModalContainer,
   ItemDetailContainer,
+  MarketContainer,
+  MarketDetailContainer,
 };

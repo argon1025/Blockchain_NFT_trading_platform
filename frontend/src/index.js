@@ -38,6 +38,9 @@ ReactDOM.render(
           <Route exact path="/itemdetail">
             <Container.ItemDetailContainer />
           </Route>
+          <Route exact path="/marketdetail">
+            <Container.MarketDetailContainer />
+          </Route>
         </PersistGate>
       </Provider>
     </React.StrictMode>

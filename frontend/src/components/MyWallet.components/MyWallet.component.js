@@ -83,7 +83,7 @@ export default class MyWalletComponent extends Component {
 
   async componentDidMount() {
     await this.props.getWalletList(this.props.ID);
-    console.log("Done");
+    console.log("getWalletList Done");
   }
 
   render() {

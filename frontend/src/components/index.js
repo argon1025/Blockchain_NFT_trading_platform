@@ -7,6 +7,8 @@ import MyWalletComponent from "./MyWallet.components/MyWallet.component";
 import CautionModal from "./CautionModal.component";
 import CreateNftModal from "./CreateNftModal.component";
 import ItemDetail from "./ItemDetail.components/ItemDetail.component";
+import MarketComponent from "./Market.components/Market.component";
+import MarketDetail from "./Market.components/MarketDetail.component";
 
 export {
   Web3LoginComponent,
@@ -18,4 +20,6 @@ export {
   CautionModal,
   CreateNftModal,
   ItemDetail,
+  MarketComponent,
+  MarketDetail,
 };
