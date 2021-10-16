@@ -95,6 +95,7 @@ console.log(allItemResult[0]);
   // 특정 아이템 상세 리스트
   async itemDetailFindByItemID(itemID: number) {
     try {
+      console.log(`아이템 서비스에서 수신 받은 아이템 아이디 ${itemID}`);
       const itemResult: any = await this.itemRepository.findOne({ where: { id: itemID }, relations: ['itemHistories'] });
       /*
 Item {
@@ -112,11 +113,18 @@ Item {
     }
   ]
 }
-console.log(itemResult);
 */
+      console.log(itemResult);
       return itemResult;
     } catch (error) {
       throw new HttpException({ msg_code: 'Item_3', msg: '리스트 조회에 실패했습니다' }, 500);
+    }
+  }
+  async itemOwnerChange(itemID: number, memberID: number) {
+    try {
+      await this.itemRepository.update({ id: itemID }, { memberId: memberID });
+    } catch (error) {
+      throw new HttpException({ msg_code: 'Item_4', msg: '아이템의 소유주를 변경하는데 실패했습니다' }, 500);
     }
   }
 }

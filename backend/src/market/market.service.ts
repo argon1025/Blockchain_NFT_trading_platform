@@ -20,6 +20,8 @@ export class MarketService {
   async createMarket(memberID: number, itemID: number, pay: string, title: string, content: string) {
     // 본인 소유 아이템 유무 확인
     const itemInfo = await this.itemService.itemDetailFindByItemID(itemID);
+    console.log(itemInfo);
+    console.log(memberID);
     if (!(itemInfo.memberId === memberID)) {
       throw new HttpException({ msg_code: 'Market_1', msg: '본인이 소유한 NFT만 등록할 수 있습니다.' }, 500);
     }
@@ -124,6 +126,14 @@ export class MarketService {
       // 상태 메시지와 리뷰 가능횟수를 등록한다
       const result = await this.tradeRequestRepository.update({ id: tradeID }, { review: 1, status: 'Done' });
       // console.log(result); UpdateResult { generatedMaps: [], raw: [], affected: 1 }
+
+      // 거래 정보를 불러온다
+      const tradeInfo = await this.tradeRequestRepository.findOne({ id: tradeID });
+      console.log(tradeInfo);
+
+      // 아이템의 소유주를 거래정보랑 대조하여 변경한다
+      this.itemService.itemOwnerChange(tradeInfo.itemId, tradeInfo.requestMemberId);
+      // 아이템 히스토리에 거래기록을 추가한다
       return true;
     } catch (error) {
       throw new HttpException({ msg_code: 'Market_7', msg: '거래를 마무리 하는데 실패했습니다.' }, 500);
