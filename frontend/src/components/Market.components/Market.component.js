@@ -26,7 +26,7 @@ export default class MarketComponent extends Component {
 
   async getMarketList() {
     try {
-      // 백엔드 서버에 아이디 생성요청
+      // 백엔드 서버에 리스트 요청
       const result = await Axios.get(`http://localhost:8080/market`, {
         withCredentials: true,
       });

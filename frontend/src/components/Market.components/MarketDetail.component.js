@@ -6,6 +6,7 @@ export default class MarketDetail extends Component {
   state = {
     parsed: {},
     marketData: {},
+    requestTradeButton: "구매 요청",
   };
   constructor(props) {
     super(props);
@@ -17,6 +18,10 @@ export default class MarketDetail extends Component {
 
   backButtonClick = () => {
     window.history.back();
+  };
+
+  changeRequestTradeButtonText = (text) => {
+    this.setState({ ...this.state, requestTradeButton: text });
   };
 
   async componentDidMount() {
@@ -44,6 +49,25 @@ export default class MarketDetail extends Component {
       return false;
     }
   }
+
+  clickedTradeRequestButton = async () => {
+    try {
+      this.changeRequestTradeButtonText("요청중");
+      // 백엔드 서버에 거래 신청
+      const result = await Axios.post(
+        `http://localhost:8080/market/requestTrade`,
+        {
+          approverMemberId: `${this.state.marketData.memberId}`,
+          itemId: `${this.state.marketData.itemId}`,
+        },
+        { withCredentials: true }
+      );
+      console.log(result);
+      this.changeRequestTradeButtonText("구매 요청을 보냈습니다!");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   render() {
     return (
@@ -109,9 +133,9 @@ export default class MarketDetail extends Component {
         <div className="w-full p-7">
           <button
             className="w-full text-white font-eng-main-font bg-blue-600 py-3 rounded-lg hover:bg-blue-400 transition duration-300"
-            onClick={this.signUpButtonClick}
+            onClick={this.clickedTradeRequestButton}
           >
-            구매요청
+            {this.state.requestTradeButton}
           </button>
         </div>
       </div>
