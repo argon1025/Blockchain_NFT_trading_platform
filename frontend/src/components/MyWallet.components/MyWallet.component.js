@@ -54,12 +54,19 @@ export default class MyWalletComponent extends Component {
       console.log(`예약 ID : ${result.data.data}`);
 
       // 생성된 아이템 아이디를 기반으로 트랜잭션
-      const web3 = new Web3("http://localhost:8545");
-      const owlToken = new web3.eth.Contract(
+      // 월렛 권한 승인
+      window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      // 월렛 프로바이더
+      window.web3 = new Web3(window.ethereum);
+      //const web3 = new Web3("http://localhost:8545");
+      // 컨트렉트 연결
+      const owlToken = new window.web3.eth.Contract(
         this.props.CONTRACT_ABI,
         this.props.CONTRACT_ADDRESS
       );
-
+      // 메서드 호출
       const sendData = await owlToken.methods
         .awardItem(this.props.ADDRESS, "1")
         .send({ from: this.props.ADDRESS });
@@ -84,6 +91,21 @@ export default class MyWalletComponent extends Component {
   async componentDidMount() {
     await this.props.getWalletList(this.props.ID);
     console.log("getWalletList Done");
+    console.log(
+      await window.ethereum.request({ method: "eth_requestAccounts" })
+    );
+    try {
+      const transactionParameters = {
+        nonce: "0x00", // ignored by MetaMask
+        gasPrice: "0x09184e72a000", // customizable by user during MetaMask confirmation.
+        gas: "0x2710", // customizable by user during MetaMask confirmation.
+        to: "0x0000000000000000000000000000000000000000", // Required except during contract publications.
+        from: window.ethereum.selectedAddress, // must match user's active address.
+        value: "0x00", // Only required to send ether to the recipient from the initiating external account.
+        data: "0x7f7465737432000000000000000000000000000000000000000000000000000000600057", // Optional, but used for defining smart contract creation and interaction.
+        chainId: "0x3", // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
+      };
+    } catch (error) {}
   }
 
   render() {

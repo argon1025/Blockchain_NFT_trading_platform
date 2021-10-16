@@ -42,7 +42,7 @@ export default class MainContentComponent extends Component {
         </div>
 
         {/* 배경 이미지 */}
-        <div className="absolute top-0 left-0 h-60 z-0 rounded-b-2xl overflow-hidden">
+        <div className="absolute bg-color-green top-0 left-0 h-60 z-0 rounded-b-2xl overflow-hidden">
           <img
             className="transform scale-150 object-cover w-screen h-full filter "
             src={backgrundImage}
