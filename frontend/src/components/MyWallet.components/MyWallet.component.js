@@ -79,13 +79,18 @@ export default class MyWalletComponent extends Component {
     }
     // 리스트 갱신
     this.changeNftCreateButtonText("리스트 갱신중..");
-    await this.timer(1000);
     await this.props.getWalletList(this.props.ID);
+    await this.timer(1000);
     console.log("close Modal");
     // 버튼 텍스트 초기화
     this.changeNftCreateButtonText("등록");
     // 모달 종료
     this.props.closeCreateNftModal();
+  };
+
+  refreshWalletList = async () => {
+    await this.props.getWalletList(this.props.ID);
+    console.log("Done getWalletList");
   };
 
   async componentDidMount() {
@@ -107,9 +112,13 @@ export default class MyWalletComponent extends Component {
         });
         return (
           <NFTCard
+            myAddress={this.props.ADDRESS}
+            CONTRACT_ABI={this.props.CONTRACT_ABI}
+            CONTRACT_ADDRESS={this.props.CONTRACT_ADDRESS}
             cardID={listData.id}
             createAt={listData.createdAt}
             title={title}
+            refreshWalletList={this.refreshWalletList}
           />
         );
       });

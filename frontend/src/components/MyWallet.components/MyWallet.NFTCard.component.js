@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Axios from "axios";
+import RequestTradeCard from "./RequestTrade.component";
 
 export default class NFTCard extends Component {
   state = {
@@ -11,6 +12,7 @@ export default class NFTCard extends Component {
     marketUploadPay: 0,
     marketUploadcontent: "",
     marketUploadButtonText: "등록",
+    requestTrade: [],
   };
   constructor(props) {
     super(props);
@@ -19,6 +21,18 @@ export default class NFTCard extends Component {
     this.state.cardID = this.props.cardID || 0;
     this.state.createAt = this.props.createAt || "2021-10-11";
     this.state.title = this.props.title || "무명";
+  }
+  async componentDidMount() {
+    // 거래 신청 목록을 요청한다
+    try {
+      const result = await Axios.get(`http://localhost:8080/requestTrade`, {
+        withCredentials: true,
+      });
+      console.log(result.data.data);
+      this.setState({ ...this.state, requestTrade: result.data.data });
+    } catch (error) {
+      console.log(error);
+    }
   }
   // 타이머
   timer = (timeSet) => {
@@ -71,13 +85,35 @@ export default class NFTCard extends Component {
   contentFromChange = (event) => {
     this.setState({ ...this.state, marketUploadcontent: event.target.value });
   };
-
   render() {
+    let requestTradeList;
+    if (Object.keys(this.state.requestTrade).length > 0) {
+      requestTradeList = this.state.requestTrade.map((listData) => {
+        // 아이템 아이디가 현제 카드 아이템 아이디와 일치하여야만 한다
+        if (this.state.cardID === listData.itemId) {
+          return (
+            <RequestTradeCard
+              id={listData.id}
+              status={listData.status}
+              itemID={listData.itemId}
+              requestMemberID={listData.requestMemberId}
+              requestMemberName={listData.requestMember.name}
+              requestMemberWalletAddress={listData.requestMember.wallet}
+              refreshWalletList={this.props.refreshWalletList}
+              myAddress={this.props.myAddress}
+              CONTRACT_ABI={this.props.CONTRACT_ABI}
+              CONTRACT_ADDRESS={this.props.CONTRACT_ADDRESS}
+            />
+          );
+        }
+        console.log(listData);
+      });
+    }
     return (
       <div className="bg-white h-auto shadow-md rounded-3xl p-3 mt-3 lg:m-2 lg:w-3/12">
         <img
           onClick={this.clickedCard}
-          class="h-24 rounded-2xl w-full object-cover"
+          className="h-24 rounded-2xl w-full object-cover"
           src="https://images.unsplash.com/photo-1605478185737-99ae313e940c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
         ></img>
         <div className="mt-3 mr-3 ml-3 flex flex-row">
@@ -88,6 +124,8 @@ export default class NFTCard extends Component {
             {this.state.createAt}
           </p>
         </div>
+        {/* 거래신청 리스트 */}
+        {requestTradeList}
         {this.state.marketUploadModal ? (
           <div className="flex flex-col mt-5 p-3 w-full">
             <div className="flex flex-col">
